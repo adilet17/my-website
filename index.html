@@ -3,125 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Приглашение</title>
+    <title>Романтическое свидание</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
+            background-color: black; /* Черный фон */
+            color: white; /* Цвет текста */
+            font-family: Arial, sans-serif; /* Шрифт */
+            display: flex; /* Используем flexbox для центрирования */
+            justify-content: center; /* По центру по горизонтали */
+            align-items: center; /* По центру по вертикали */
+            height: 100vh; /* Высота 100% экрана */
+            margin: 0; /* Убираем отступы */
+            text-align: center; /* Центрирование текста */
         }
-
-        #inputPage, #greetingPage {
-            display: none;
-        }
-
-        .center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         input {
             padding: 10px;
-            margin-top: 10px;
             font-size: 16px;
+            border-radius: 5px; /* Круглые углы */
+            border: 1px solid white; /* Белая рамка */
+            margin-top: 20px; /* Отступ сверху */
         }
-
         button {
-            margin-top: 10px;
             padding: 10px 20px;
-            font-size: 18px;
-            background-color: white;
-            color: black;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            border-radius: 5px; /* Круглые углы */
+            border: none; /* Без рамки */
+            background-color: white; /* Белый фон */
+            color: black; /* Черный текст */
+            cursor: pointer; /* Указатель при наведении */
+            transition: transform 0.3s, left 0.3s, top 0.3s; /* Плавный эффект */
+            position: relative; /* Позиция относительно родителя */
         }
-
-        .no-button {
-            background-color: white;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.5s ease;
+        button:hover {
+            transform: translateY(-5px); /* Подъем кнопки при наведении */
         }
-
-        .no-button:hover {
-            transform: translateX(100px);
-        }
-
         #popup {
-            display: none;
-            background-color: #fff;
-            color: #000;
-            padding: 20px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 10px;
+            display: none; /* Скрываем всплывающее окно по умолчанию */
+            position: fixed; /* Фиксированное положение */
+            top: 50%; /* Центрирование по вертикали */
+            left: 50%; /* Центрирование по горизонтали */
+            transform: translate(-50%, -50%); /* Смещение для центрирования */
+            background-color: black; /* Черный фон для окна */
+            color: white; /* Белый текст */
+            padding: 15px; /* Отступы */
+            border-radius: 10px; /* Закругленные углы */
+            z-index: 100; /* Поверх других элементов */
+            min-width: 200px; /* Минимальная ширина */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Тень для эффекта */
+            text-align: center; /* Центрирование текста */
         }
-
+        #closePopup {
+            margin-top: 10px; /* Отступ сверху */
+        }
     </style>
 </head>
 <body>
-
-    <div id="inputPage" class="center">
+    <div id="firstPage">
         <h1>Введите ваше имя</h1>
-        <input type="text" id="nameInput" placeholder="Ваше имя">
+        <input type="text" id="nameInput" placeholder="Ваше имя" />
     </div>
-
-    <div id="greetingPage" class="center">
-        <h1 id="greetingMessage"></h1>
-        <p>Этот сайт я написал специально для тебя, чтобы позвать на свидание. Тебе нужно ответить, пойдешь ли ты со мной на свидание? Пожалуйста, выбери вариант "Да".</p>
+    <div id="secondPage" style="display: none;">
+        <h1>У тебя прекрасное имя "<span id="userName"></span>", мне оно очень нравится!</h1>
+        <p>Я решил для тебя написать маленький сайт, надеюсь тебе понравится<333</p>
+        <button id="whyButton">Зачем?</button>
+    </div>
+    <div id="thirdPage" style="display: none;">
+        <h1>Чтобы пригласить тебя на свидание, "<span id=userNameForDinner></span>"!</h1>
+        <p>Я бы хотел с тобой поужинать. Ответь же мне, ты согласна? (Дай мне шанс!))</p>
         <button id="yesButton">Да</button>
-        <button class="no-button">Нет</button>
+        <button id="noButton">Нет</button>
     </div>
-
     <div id="popup">
-        <p>Место: Орбита 4, кафе кимчи</p>
-        <p>Время: 20:00</p>
-        <button onclick="closePopup()">Закрыть</button>
+        <p id="popupMessage"></p>
+        <button id="closePopup">ОК</button>
     </div>
-
     <script>
-        const inputPage = document.getElementById('inputPage');
-        const greetingPage = document.getElementById('greetingPage');
-        const nameInput = document.getElementById('nameInput');
-        const greetingMessage = document.getElementById('greetingMessage');
-        const yesButton = document.getElementById('yesButton');
-        const popup = document.getElementById('popup');
-
-        inputPage.style.display = 'flex';
-
-        nameInput.addEventListener('keypress', function(event) {
+        // Первая страница: Ввод имени
+        document.getElementById('nameInput').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                const name = nameInput.value;
-                if (name) {
-                    greetingMessage.innerText = `Привет, ${name}.`;
-                    inputPage.style.display = 'none';
-                    greetingPage.style.display = 'flex';
-                }
+                var name = this.value;
+                document.getElementById('userName').textContent = name;
+                document.getElementById('firstPage').style.display = 'none';
+                document.getElementById('secondPage').style.display = 'block';
             }
         });
 
-        yesButton.addEventListener('click', function() {
-            popup.style.display = 'block';
+        // Кнопка "Зачем?" на второй странице
+        document.getElementById('whyButton').addEventListener('click', function() {
+            var name = document.getElementById('userName').textContent;
+            document.getElementById('userNameForDinner').textContent = name;
+            document.getElementById('secondPage').style.display = 'none';
+            document.getElementById('thirdPage').style.display = 'block';
         });
 
-        function closePopup() {
-            popup.style.display = 'none';
-        }
-    </script>
+        // Кнопка "Да" на третьей странице
+        document.getElementById('yesButton').addEventListener('click', function() {
+            document.getElementById('popupMessage').textContent = 'Место: Abay avenue 23. TneM Neo bistro.\nДата и время: 11.10.2024 20:00.\n\nПри желании вы можете поменять дату и время, сообщите это разработчику!) ';
+            document.getElementById('popup').style.display = 'block'; // Показать всплывающее окно
+        });
 
+        // Закрытие всплывающего окна
+        document.getElementById('closePopup').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'none'; // Скрыть всплывающее окно
+        });
+
+        // Кнопка "Нет" с плавным эффектом
+        document.getElementById('noButton').addEventListener('mouseover', function() {
+            const x = Math.random() * (window.innerWidth - 100); // Случайная позиция по X
+            const y = Math.random() * (window.innerHeight - 100); // Случайная позиция по Y
+            this.style.transition = 'left 0.5s, top 0.5s'; // Плавный переход
+            this.style.position = 'absolute'; // Позиционирование
+            this.style.left = x + 'px'; // Новая позиция по X
+            this.style.top = y + 'px'; // Новая позиция по Y
+        });
+    </script>
 </body>
 </html>
